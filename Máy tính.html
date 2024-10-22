@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Calculator</title>
+  <style>
+    body {
+      background-color: #2c3e50; /* Nền xám xanh dịu */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background-color: #34495e; /* Nền xanh đậm dịu */
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .screen {
+      width: 240px;
+      height: 60px;
+      background-color: #ecf0f1; /* Nền trắng xám nhẹ */
+      color: #2c3e50; /* Màu chữ xanh đậm */
+      font-size: 28px;
+      text-align: right;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .button {
+      width: 60px;
+      height: 60px;
+      background-color: #e74c3c; /* Nút đỏ dịu */
+      border: none;
+      margin: 5px;
+      font-size: 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:active {
+      background-color: #c0392b; /* Nút nhấn đỏ đậm */
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+    }
+
+    .floating-text {
+      position: absolute;
+      font-size: 40px; /* Chữ lớn hơn */
+      color: #e74c3c; /* Màu đỏ dịu */
+      font-weight: bold;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      top: 20%;
+      left: -100%; /* Bắt đầu từ bên trái màn hình */
+      transform: translateY(-50%);
+      opacity: 0;
+      animation: slideIn 5s forwards; /* Tạo hiệu ứng trượt vào và giữ 5s */
+    }
+
+    @keyframes slideIn {
+      0% {
+        left: -100%;
+        opacity: 0;
+      }
+      25% {
+        left: 50%;
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+      75% {
+        left: 50%;
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+      100% {
+        left: 50%;
+        opacity: 0;
+        transform: translate(-50%, -50%);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <div id="screen" class="screen">0</div>
+  <div class="buttons">
+    <button class="button" onclick="inputCharacter('7')">7</button>
+    <button class="button" onclick="inputCharacter('8')">8</button>
+    <button class="button" onclick="inputCharacter('9')">9</button>
+    <button class="button" onclick="inputCharacter('/')">÷</button>
+
+    <button class="button" onclick="inputCharacter('4')">4</button>
+    <button class="button" onclick="inputCharacter('5')">5</button>
+    <button class="button" onclick="inputCharacter('6')">6</button>
+    <button class="button" onclick="inputCharacter('*')">×</button>
+
+    <button class="button" onclick="inputCharacter('1')">1</button>
+    <button class="button" onclick="inputCharacter('2')">2</button>
+    <button class="button" onclick="inputCharacter('3')">3</button>
+    <button class="button" onclick="inputCharacter('-')">-</button>
+
+    <button class="button" onclick="inputCharacter('0')">0</button>
+    <button class="button" onclick="clearScreen()">C</button>
+    <button class="button" onclick="inputCharacter('+')">+</button>
+    <button class="button" onclick="calculate()">=</button>
+    
+  </div>
+</div>
+
+<div id="floatingText" class="floating-text" style="display: none;">Try Your Best</div>
+
+<script>
+  let screen = document.getElementById('screen');
+  let expression = '';
+
+  function inputCharacter(char) {
+    if (expression.length < 30) { // Giới hạn độ dài biểu thức
+      expression += char;
+      screen.innerText = expression;
+    }
+  }
+
+  function calculate() {
+    try {
+      let result = eval(expression);
+      screen.innerText = result;
+      expression = result; // Giữ kết quả để tiếp tục tính toán
+
+      // Hiển thị chữ tùy theo kết quả
+      let floatingText = document.getElementById('floatingText');
+      if (result < 0) {
+        floatingText.innerText = "CÓ BUỒN!";
+      } else if (result === 0) {
+        floatingText.innerText = "KHÔNG BUỒN!";
+      } else if (result > 0 && result < 100) {
+        floatingText.innerText = "HƠI HƠI BUỒN!";
+      } else if (result >= 100) {
+        floatingText.innerText = "NGÀY MAI SẼ KHÁC";
+      }
+
+      // Hiển thị dòng chữ với animation
+      floatingText.style.display = 'block';
+      floatingText.style.animation = 'slideIn 5s forwards';
+      setTimeout(() => {
+        floatingText.style.display = 'none';
+      }, 5000); // Ẩn sau 5 giây
+    } catch (error) {
+      screen.innerText = 'Error';
+      expression = '';
+    }
+  }
+
+  function clearScreen() {
+    expression = '';
+    screen.innerText = '0';
+  }
+</script>
+
+</body>
+</html>
